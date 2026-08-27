@@ -28,10 +28,9 @@ import json
 import logging
 import os
 import random
-from typing import Any, Dict, List
 import re
 import socket
-from typing import Optional
+from typing import Any, Dict, List, Optional
 
 from cloudinit import atomic_helper, dmi, sources, subp, util
 from cloudinit.event import EventScope, EventType
