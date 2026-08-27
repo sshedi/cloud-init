@@ -234,7 +234,7 @@ class DataSourceSmartOS(sources.DataSource):
         self._init()
 
         md = {}
-        ud = ""
+        ud: Any = ""
 
         if not self.smartos_type:
             LOG.debug("Not running on smartos")
@@ -307,7 +307,7 @@ class DataSourceSmartOS(sources.DataSource):
             else:
                 md["local-hostname"] = md["instance-id"]
 
-        ud: Any = None
+        ud = None
         if md["user-data"]:
             ud = md["user-data"]
 
@@ -976,7 +976,7 @@ def convert_smartos_network_data(
                     # when in doubt, use brute force! Routes for everyone!
                     rcfg.update({"network": route["dst"]})
                     routeents.append(rcfg)
-                    subnet.update({"routes": routeents})
+                    subnet.update({"routes": routeents})  # type: ignore[dict-item]
 
             subnets.append(subnet)
         cfg.update({"subnets": subnets})
