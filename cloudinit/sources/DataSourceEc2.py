@@ -14,7 +14,7 @@ import os
 import time
 import uuid
 from contextlib import suppress
-from typing import Dict, List, Literal, Optional
+from typing import Any, Dict, List, Literal, Optional
 
 from cloudinit import dmi, net, sources
 from cloudinit import url_helper as uhelp
@@ -131,7 +131,7 @@ class DataSourceEc2(sources.DataSource):
     def __init__(self, sys_cfg, distro, paths):
         super(DataSourceEc2, self).__init__(sys_cfg, distro, paths)
         self.metadata_address = None
-        self.identity = None
+        self.identity: Any = None
         self._fallback_nic_order = NicOrder.MAC
 
     def _unpickle(self, ci_pkl_version: int) -> None:
@@ -1103,7 +1103,7 @@ def convert_ec2_metadata_network_config(
 
     @return A dict of network config version 2 based on the metadata and macs.
     """
-    netcfg = {"version": 2, "ethernets": {}}
+    netcfg: Dict[str, Any] = {"version": 2, "ethernets": {}}
     if not macs_to_nics:
         macs_to_nics = net.get_interfaces_by_mac()
     macs_metadata = network_md["interfaces"]["macs"]
