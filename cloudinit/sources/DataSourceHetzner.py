@@ -194,6 +194,7 @@ class DataSourceHetzner(sources.DataSource):
         the IP information may have changed due to snapshot and/or
         migration.
         """
+
         net_config = self.metadata["network-config"]
         if not net_config:
             raise RuntimeError("Unable to get meta-data from server....")
