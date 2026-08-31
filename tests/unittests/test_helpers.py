@@ -4,13 +4,14 @@
 
 import os
 from pathlib import Path
+from typing import Optional
 
 from cloudinit import sources
 from tests.helpers import cloud_init_project_dir, get_top_level_dir
 
 
 class MyDataSource(sources.DataSource):
-    _instance_id = None
+    _instance_id: Optional[str] = None
 
     def get_instance_id(self):
         return self._instance_id
@@ -18,7 +19,7 @@ class MyDataSource(sources.DataSource):
 
 class TestPaths:
     def test_get_ipath_and_instance_id_with_slashes(self, paths):
-        myds = MyDataSource(sys_cfg={}, distro=None, paths={})
+        myds = MyDataSource(sys_cfg={}, distro=None, paths={})  # type: ignore[arg-type]
         myds._instance_id = "/foo/bar"
         paths.datasource = myds
         safe_iid = "_foo_bar"
@@ -29,7 +30,7 @@ class TestPaths:
         )
 
     def test_get_ipath_and_empty_instance_id_returns_none(self, paths):
-        myds = MyDataSource(sys_cfg={}, distro=None, paths={})
+        myds = MyDataSource(sys_cfg={}, distro=None, paths={})  # type: ignore[arg-type]
         myds._instance_id = None
         paths.datasource = myds
 
