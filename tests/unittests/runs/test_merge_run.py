@@ -54,6 +54,7 @@ class TestMergeRun:
         initer.read_cfg()
         initer.initialize()
         initer.fetch()
+        assert initer.datasource is not None
         initer.datasource.userdata_raw = user_data
         initer.instancify()
         initer.update()
