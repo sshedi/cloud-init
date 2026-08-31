@@ -87,7 +87,7 @@ class TestApport:
 
     @mock.patch(M_PATH + "os.path.exists", return_value=True)
     def test_attach_ubuntu_pro_info(self, m_exists, m_hookutils):
-        report = {}
+        report: dict = {}
         apport.attach_ubuntu_pro_info(report)
 
         assert [
@@ -101,7 +101,7 @@ class TestApport:
     def test_attach_ubuntu_pro_info_log_non_present(
         self, m_exists, m_hookutils
     ):
-        report = {}
+        report: dict = {}
         apport.attach_ubuntu_pro_info(report)
 
         assert [
