@@ -449,7 +449,7 @@ class EphemeralIPNetwork:
 
         # short-circuit if we already have connectivity to IMDS
         if imds_url := _check_connectivity_to_imds(
-            self.connectivity_urls_data
+            self.connectivity_urls_data or []
         ):
             LOG.debug(
                 "We already have connectivity to IMDS at %s, skipping DHCP.",
