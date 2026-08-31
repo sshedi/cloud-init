@@ -1,8 +1,14 @@
-from collections import namedtuple
+from pathlib import Path
+from typing import NamedTuple
 
 import pytest
 
 from cloudinit.analyze import analyze_show
+
+
+class MockIO(NamedTuple):
+    infile: Path
+    outfile: Path
 
 
 @pytest.fixture
@@ -10,7 +16,7 @@ def mock_io(tmp_path):
     """Mock args for configure_io function"""
     infile = tmp_path / "infile"
     outfile = tmp_path / "outfile"
-    return namedtuple("MockIO", ["infile", "outfile"])(infile, outfile)
+    return MockIO(infile, outfile)
 
 
 class TestAnalyzeShow:
