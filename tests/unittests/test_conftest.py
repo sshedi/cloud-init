@@ -15,7 +15,7 @@ class TestDisableSubpUsage:
         with pytest.raises(TypeError):
             # We are intentionally passing no value for a parameter, so:
             #  pylint: disable=no-value-for-parameter
-            subp.subp()
+            subp.subp()  # type: ignore[call-arg]
 
     def test_subp_exception_escapes_exception_handling(self):
         with pytest.raises(UnexpectedSubpError):
