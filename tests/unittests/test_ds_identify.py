@@ -7,6 +7,7 @@ from logging import getLogger
 from pathlib import Path
 from tempfile import mkdtemp
 from textwrap import dedent
+from typing import Any, Dict, List, Union
 from uuid import uuid4
 
 import pytest
@@ -350,15 +351,20 @@ class DsIdentifyBase:
         ]
 
         def write_mock(data):
-            ddata = {"out": None, "err": None, "ret": 0, "RET": None}
+            ddata: Dict[str, Any] = {
+                "out": None,
+                "err": None,
+                "ret": 0,
+                "RET": None,
+            }
             ddata.update(data)
             for k in ddata.keys():
                 if ddata[k] is None:
                     ddata[k] = unset
             return SHELL_MOCK_TMPL % ddata
 
-        mocklines = []
-        default_mocks = [
+        mocklines: List[str] = []
+        default_mocks: List[Dict[str, Any]] = [
             MOCK_NOT_LXD_DATASOURCE,
             {"name": "detect_virt", "RET": "none", "ret": 1},
             {"name": "uname", "out": UNAME_MYSYS},
@@ -415,7 +421,7 @@ class DsIdentifyBase:
             with open(dir, "w") as fp:
                 fp.write(mocked_ds_identify)
 
-        rc = 0
+        rc: Union[int, str] = 0
         try:
             out, err = subp.subp(
                 ["sh", "-c", ". %s" % wrap],
@@ -1623,7 +1629,7 @@ def _print_run_output(rc, out, err, cfg, files):
             print(" " + line)
 
 
-VALID_CFG = {
+VALID_CFG: Dict[str, Any] = {
     "Akamai": {
         "ds": "Akamai",
         "mocks": [{"name": "dmi_decode", "ret": 0, "RET": "Linode"}],
