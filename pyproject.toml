@@ -25,6 +25,7 @@ exclude = []
 [[tool.mypy.overrides]]
 module = [
     "apport.*",
+    "apt_pkg",
     "configobj",
     "crypt",
     "debconf",
@@ -42,7 +43,6 @@ module = [
     "cloudinit.distros.bsd",
     "cloudinit.distros.opensuse",
     "cloudinit.distros.parsers.resolv_conf",
-    "cloudinit.helpers",
     "cloudinit.net.freebsd",
     "cloudinit.net.netbsd",
     "cloudinit.net.network_manager",
