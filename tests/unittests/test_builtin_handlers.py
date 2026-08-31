@@ -6,6 +6,7 @@ import copy
 import errno
 import os
 import re
+from typing import Any, Dict
 from unittest import mock
 
 import pytest
@@ -315,12 +316,12 @@ class TestConvertJinjaInstanceData:
 
     def test_convert_instance_data_most_recent_version_of_promoted_keys(self):
         """The most-recent versioned key value is promoted to top-level."""
-        data = {
+        data: Dict[str, Any] = {
             "v1": {"key1": "old v1 key1", "key2": "old v1 key2"},
             "v2": {"key1": "newer v2 key1", "key3": "newer v2 key3"},
             "v3": {"key1": "newest v3 key1"},
         }
-        expected_data = copy.deepcopy(data)
+        expected_data: Dict[str, Any] = copy.deepcopy(data)
         expected_data.update(
             {
                 "key1": "newest v3 key1",
@@ -334,8 +335,11 @@ class TestConvertJinjaInstanceData:
 
     def test_convert_instance_data_decodes_decode_paths(self):
         """Any decode_paths provided are decoded by convert_instance_data."""
-        data = {"key1": {"subkey1": "aGkgbW9t"}, "key2": "aGkgZGFk"}
-        expected_data = copy.deepcopy(data)
+        data: Dict[str, Any] = {
+            "key1": {"subkey1": "aGkgbW9t"},
+            "key2": "aGkgZGFk",
+        }
+        expected_data: Dict[str, Any] = copy.deepcopy(data)
         expected_data["key1"]["subkey1"] = "hi mom"
 
         converted_data = convert_jinja_instance_data(
