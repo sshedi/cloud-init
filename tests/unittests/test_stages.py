@@ -96,7 +96,7 @@ class TestInit:
         sym_link(tmpdir.join("instance-uuid"), tmpdir.join("instance"))
         self.init.datasource = FakeDataSource(paths=self.init.paths)
         self._real_is_new_instance = self.init.is_new_instance
-        self.init.is_new_instance = mock.Mock(return_value=True)
+        self.init.is_new_instance = mock.Mock(return_value=True)  # type: ignore[method-assign]
 
     def test_wb__find_networking_config_disabled(self):
         """find_networking_config returns no config when disabled."""
@@ -224,12 +224,12 @@ class TestInit:
         m_initramfs.return_value = {"config": "disabled"}
 
         self.init.datasource = FakeDataSource(network_config=in_config)
-        self.init.datasource.network_config_sources = [
+        self.init.datasource.network_config_sources = (
             NetworkConfigSource.DS,
             NetworkConfigSource.SYSTEM_CFG,
             NetworkConfigSource.CMD_LINE,
             NetworkConfigSource.INITRAMFS,
-        ]
+        )
 
         assert (
             out_config,
@@ -250,10 +250,10 @@ class TestInit:
     ):
         """find_networking_config should check sources in DS defined order"""
         self.init.datasource = FakeDataSource(network_config=in_config)
-        self.init.datasource.network_config_sources = [
+        self.init.datasource.network_config_sources = (  # type: ignore[assignment]
             "invalid_src",
             NetworkConfigSource.DS,
-        ]
+        )
 
         assert (
             out_config,
@@ -279,10 +279,10 @@ class TestInit:
     ):
         """find_networking_config should check sources in DS defined order"""
         self.init.datasource = FakeDataSource(network_config=in_config)
-        self.init.datasource.network_config_sources = [
+        self.init.datasource.network_config_sources = (
             NetworkConfigSource.FALLBACK,
             NetworkConfigSource.DS,
-        ]
+        )
 
         assert (
             out_config,
@@ -452,7 +452,7 @@ class TestInit:
         def fake_network_config():
             return (None, disable_file)
 
-        self.init._find_networking_config = fake_network_config
+        self.init._find_networking_config = fake_network_config  # type: ignore[method-assign]
 
         self.init.apply_network_config(True)
         assert caplog.records[0].levelname == "INFO"
@@ -482,7 +482,7 @@ class TestInit:
 
         m_macs.return_value = {"42:42:42:42:42:42": "eth9"}
 
-        self.init._find_networking_config = fake_network_config
+        self.init._find_networking_config = fake_network_config  # type: ignore[method-assign]
         if not instance_dir_present:
             self.tmpdir.join("instance").remove()
             self.tmpdir.join("instance-uuid").remove()
@@ -512,7 +512,7 @@ class TestInit:
     def test_apply_network_on_same_instance_id(self, m_ubuntu, caplog):
         """Only call distro.networking.apply_network_config_names on same
         instance id."""
-        self.init.is_new_instance = self._real_is_new_instance
+        self.init.is_new_instance = self._real_is_new_instance  # type: ignore[method-assign]
         old_instance_id = os.path.join(
             self.init.paths.get_cpath("data"), "instance-id"
         )
@@ -532,7 +532,7 @@ class TestInit:
         def fake_network_config():
             return net_cfg, NetworkConfigSource.FALLBACK
 
-        self.init._find_networking_config = fake_network_config
+        self.init._find_networking_config = fake_network_config  # type: ignore[method-assign]
 
         self.init.apply_network_config(True)
         networking = self.init.distro.networking
@@ -565,9 +565,9 @@ class TestInit:
 
         m_macs.return_value = {"42:42:42:42:42:42": "eth9"}
 
-        self.init._find_networking_config = fake_network_config
+        self.init._find_networking_config = fake_network_config  # type: ignore[method-assign]
         self.init.datasource = FakeDataSource(paths=self.init.paths)
-        self.init.is_new_instance = mock.Mock(return_value=False)
+        self.init.is_new_instance = mock.Mock(return_value=False)  # type: ignore[method-assign]
         return net_cfg
 
     @mock.patch("cloudinit.util._get_cmdline", return_value="")
