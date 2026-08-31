@@ -482,7 +482,7 @@ def get_apt_cfg() -> Dict[str, str]:
         # interaction due to 7 ms performance improvement above subp.
         # Given that debian/buntu images may not contain python3-apt
         # fallback to subp if the image lacks this dependency.
-        import apt_pkg  # type: ignore
+        import apt_pkg
 
         apt_pkg.init_config()
         etc = apt_pkg.config.get("Dir::Etc", DEFAULT_APT_CFG["Dir::Etc"])
