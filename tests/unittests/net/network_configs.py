@@ -1,8 +1,9 @@
 """A (hopefully) temporary home for network config test data."""
 
 import textwrap
+from typing import Any, Dict
 
-NETWORK_CONFIGS = {
+NETWORK_CONFIGS: Dict[str, Any] = {
     "small_suse_dhcp6": {
         "expected_sysconfig_opensuse": {
             "ifcfg-eth1": textwrap.dedent("""\
