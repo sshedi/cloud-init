@@ -7,6 +7,7 @@ import logging
 import os
 import stat
 import sys
+from typing import Any, List
 from unittest import mock
 
 import pytest
@@ -172,8 +173,8 @@ class TestSubp:
         assert out == expected
 
     def test_subp_decode_strict_raises(self):
-        args = []
-        kwargs = {
+        args: List[Any] = []
+        kwargs: Any = {
             "args": self.stdin2out,
             "capture": True,
             "decode": "strict",
@@ -225,7 +226,7 @@ class TestSubp:
             subp.ProcessExecutionError, match=r"Missing #! in script\?"
         ):
             subp.subp(
-                (noshebang,),
+                [noshebang],
             )
 
     def test_returns_none_if_no_capture(self):
@@ -250,7 +251,7 @@ class TestSubp:
     def test_exception_invalid_command(self):
         args = [None, "first", "arg", "missing"]
         with pytest.raises(subp.ProcessExecutionError):
-            subp.subp(args)
+            subp.subp(args)  # type: ignore[arg-type]
 
     def test_bunch_of_slashes_in_path(self):
         assert "/target/my/path/" == subp.target_path("/target/", "//my/path/")
