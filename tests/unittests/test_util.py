@@ -14,6 +14,7 @@ from collections import deque
 from contextlib import nullcontext as does_not_raise
 from pathlib import Path
 from textwrap import dedent
+from typing import Any, Dict, Optional, Tuple
 from unittest import mock
 from urllib.parse import urlparse
 
@@ -1665,6 +1666,7 @@ class TestRedirectOutputPreexecFn:
         using it to cover both the stdout and stderr code paths.
         """
         test_string = "| piped output to invoke subprocess"
+        args: Tuple[Optional[str], Optional[str]]
         if request.param == "outfmt":
             args = (test_string, None)
         elif request.param == "errfmt":
@@ -1731,13 +1733,13 @@ class FakeSelinux:
 class TestGetCfgOptionListOrStr:
     def test_not_found_no_default(self):
         """None is returned if key is not found and no default given."""
-        config = {}
+        config: Dict[str, Any] = {}
         result = util.get_cfg_option_list(config, "key")
         assert result is None
 
     def test_not_found_with_default(self):
         """Default is returned if key is not found."""
-        config = {}
+        config: Dict[str, Any] = {}
         result = util.get_cfg_option_list(config, "key", default=["DEFAULT"])
         assert ["DEFAULT"] == result
 
@@ -2265,7 +2267,7 @@ class TestIsX86:
 class TestGetConfigLogfiles:
     def test_empty_cfg_returns_empty_list(self):
         """An empty config passed to get_config_logfiles returns empty list."""
-        assert [] == util.get_config_logfiles(None)
+        assert [] == util.get_config_logfiles(None)  # type: ignore[arg-type]
         assert [] == util.get_config_logfiles({})
 
     def test_default_log_file_present(self):
@@ -2477,7 +2479,7 @@ class TestReadOptionalSeed:
         """Set fill dict values based on seed files present."""
         if seed_dir is not None:
             helpers.populate_dir(tmpdir.strpath, seed_dir)
-        fill = {}
+        fill: Dict[str, Any] = {}
         assert (
             util.read_optional_seed(fill, tmpdir.strpath + os.path.sep)
             is retval
@@ -3282,7 +3284,7 @@ class MockPath:
 
 class TestReadHotplugEnabledFile:
     def test_file_not_found(self, caplog):
-        assert {"scopes": []} == util.read_hotplug_enabled_file(MockPath())
+        assert {"scopes": []} == util.read_hotplug_enabled_file(MockPath())  # type: ignore[arg-type]
         assert "not decodable" not in caplog.text
 
     def test_json_decode_error(self, caplog, tmpdir):
@@ -3294,7 +3296,7 @@ class TestReadHotplugEnabledFile:
         )
         target_file.write("asdfasdfa")
         assert {"scopes": []} == util.read_hotplug_enabled_file(
-            MockPath(target_file.strpath)
+            MockPath(target_file.strpath)  # type: ignore[arg-type]
         )
         assert "not decodable" in caplog.text
 
@@ -3308,7 +3310,7 @@ class TestReadHotplugEnabledFile:
         )
         target_file.write(content)
         assert {"scopes": ["network"]} == util.read_hotplug_enabled_file(
-            MockPath(target_file.strpath)
+            MockPath(target_file.strpath)  # type: ignore[arg-type]
         )
 
 
