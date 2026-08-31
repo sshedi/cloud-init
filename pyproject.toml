@@ -117,7 +117,6 @@ module = [
     "tests.unittests.sources.test_upcloud",
     "tests.unittests.sources.test_vultr",
     "tests.unittests.sources.vmware.test_vmware_config_file",
-    "tests.unittests.test_conftest",
     "tests.unittests.test_ds_identify",
     "tests.unittests.test_helpers",
     "tests.unittests.test_merging",
