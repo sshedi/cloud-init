@@ -9,7 +9,7 @@ import json
 import os
 import re
 import textwrap
-from typing import Optional
+from typing import Any, Dict, List, Optional, cast
 
 import pytest
 import yaml
@@ -58,7 +58,7 @@ DHCPLEASETIME='3600'
 DOMAINSEARCH='foo.com'
 """
 
-DHCP_EXPECTED_1 = {
+DHCP_EXPECTED_1: Dict[str, Any] = {
     "name": "eth0",
     "type": "physical",
     "subnets": [
@@ -1598,6 +1598,7 @@ class TestGenerateFallbackConfig:
         )
 
         network_cfg = net.generate_fallback_config(config_driver=True)
+        assert network_cfg is not None
         ns = network_state.parse_net_config_data(
             network_cfg, skip_broken=False
         )
@@ -1690,6 +1691,7 @@ iface eth0 inet6 dhcp
         )
 
         network_cfg = net.generate_fallback_config(config_driver=True)
+        assert network_cfg is not None
         ns = network_state.parse_net_config_data(
             network_cfg, skip_broken=False
         )
@@ -1918,6 +1920,7 @@ class TestRhelSysConfigRendering:
         )
 
         network_cfg = net.generate_fallback_config()
+        assert network_cfg is not None
         ns = network_state.parse_net_config_data(
             network_cfg, skip_broken=False
         )
@@ -2125,8 +2128,8 @@ USERCTL=no
             renderer.render_network_state(ns, target=render_dir)
             renderer.render_network_state(ns, target=render_dir)
             renderer.render_network_state(ns, target=render_dir)
-            for fn, expected_content in os_sample.get(
-                "out_sysconfig_rhel", []
+            for fn, expected_content in cast(
+                list, os_sample.get("out_sysconfig_rhel", [])
             ):
                 with open(os.path.join(render_dir, fn)) as fh:
                     assert expected_content == fh.read()
@@ -2385,7 +2388,7 @@ USERCTL=no
     def test_netplan_dhcp_false_no_dhcp_in_sysconfig(self):
         """netplan cfg with dhcp[46]: False should not have bootproto=dhcp"""
 
-        entry = {
+        entry: Dict[str, Any] = {
             "yaml": NETPLAN_DHCP_FALSE,
             "expected_sysconfig": {
                 "ifcfg-ens3": textwrap.dedent("""\
@@ -2537,7 +2540,7 @@ USERCTL=no
                 ] += "IPV6INIT=yes\nDHCPV6C=yes\nIPV6_ROUTE_METRIC=100\n"
             else:
                 expected["ifcfg-eno1"] += "IPV4_ROUTE_METRIC=100\n"
-            v2data["ethernets"]["eno1"].update(
+            cast(Dict[str, Any], v2data["ethernets"])["eno1"].update(
                 {dhcp_ver: True, "{0}-overrides".format(dhcp_ver): overrides}
             )
             self._compare_files_to_expected(
@@ -2759,6 +2762,7 @@ class TestOpenSuseSysConfigRendering:
         )
 
         network_cfg = net.generate_fallback_config()
+        assert network_cfg is not None
         ns = network_state.parse_net_config_data(
             network_cfg, skip_broken=False
         )
@@ -2801,8 +2805,8 @@ STARTMODE=auto
             renderer.render_network_state(ns, target=render_dir)
             renderer.render_network_state(ns, target=render_dir)
             renderer.render_network_state(ns, target=render_dir)
-            for fn, expected_content in os_sample.get(
-                "out_sysconfig_opensuse", []
+            for fn, expected_content in cast(
+                list, os_sample.get("out_sysconfig_opensuse", [])
             ):
                 with open(os.path.join(render_dir, fn)) as fh:
                     assert expected_content == fh.read()
@@ -2992,6 +2996,7 @@ class TestNetworkManagerRendering:
         )
 
         network_cfg = net.generate_fallback_config()
+        assert network_cfg is not None
         ns = network_state.parse_net_config_data(
             network_cfg, skip_broken=False
         )
@@ -3050,7 +3055,9 @@ class TestNetworkManagerRendering:
             renderer.render_network_state(ns, target=render_dir)
             renderer.render_network_state(ns, target=render_dir)
             renderer.render_network_state(ns, target=render_dir)
-            for fn, expected_content in os_sample.get(self.expected_name, []):
+            for fn, expected_content in cast(
+                list, os_sample.get(self.expected_name, [])
+            ):
                 with open(os.path.join(render_dir, fn)) as fh:
                     assert expected_content == fh.read()
 
@@ -3242,6 +3249,7 @@ class TestEniNetRendering:
         )
 
         network_cfg = net.generate_fallback_config()
+        assert network_cfg is not None
         ns = network_state.parse_net_config_data(
             network_cfg, skip_broken=False
         )
@@ -4915,7 +4923,7 @@ class TestNetworkdNetRendering:
         self.tmp_dir = lambda: str(tmpdir_factory.mktemp("a", numbered=True))
 
     def create_conf_dict(self, contents):
-        content_dict = {}
+        content_dict: Dict[str, List[str]] = {}
         for line in contents:
             if line:
                 line = line.strip()
@@ -4950,6 +4958,7 @@ class TestNetworkdNetRendering:
         )
 
         network_cfg = net.generate_fallback_config()
+        assert network_cfg is not None
         ns = network_state.parse_net_config_data(
             network_cfg, skip_broken=False
         )
@@ -4986,7 +4995,7 @@ class TestNetworkdRoundTrip:
         self.tmp_dir = lambda: str(tmpdir_factory.mktemp("a", numbered=True))
 
     def create_conf_dict(self, contents):
-        content_dict = {}
+        content_dict: Dict[str, List[str]] = {}
         for line in contents:
             if line:
                 line = line.strip()
@@ -5798,7 +5807,7 @@ class TestGetIBHwaddrsByInterface:
     def test_ethernet(self, mocks):
         self.data["devices"].remove("ib0")
         result = net.get_ib_hwaddrs_by_interface()
-        expected = {}
+        expected: Dict[str, Any] = {}
         assert expected == result
 
     def test_ib(self, mocks):
