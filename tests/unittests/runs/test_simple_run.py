@@ -75,7 +75,7 @@ class TestSimpleRun:
         assert iid == "iid-datasource-none"
         initer.update()
         assert os.path.islink("var/lib/cloud/instance")
-        initer._find_networking_config = fake_network_config
+        initer._find_networking_config = fake_network_config  # type: ignore[method-assign]
         assert not os.path.exists(
             "/var/lib/cloud/instance/network-config.json"
         )
