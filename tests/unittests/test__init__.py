@@ -3,9 +3,11 @@
 import logging
 import os
 from types import SimpleNamespace
+from typing import cast
 from unittest import mock
 
 import pytest
+import requests
 
 from cloudinit import handlers, helpers, settings, url_helper, util
 from cloudinit.cmd import main
@@ -21,10 +23,12 @@ def walker_data(tmp_path):
         "data": None,
     }
 
-    expected_module_name = "part-handler-%03d" % (data["handlercount"],)
+    expected_module_name = "part-handler-%03d" % (
+        cast(int, data["handlercount"]),
+    )
     expected_file_name = "%s.py" % expected_module_name
     expected_file_fullname = os.path.join(
-        data["handlerdir"], expected_file_name
+        cast(str, data["handlerdir"]), expected_file_name
     )
 
     return SimpleNamespace(
@@ -242,18 +246,21 @@ class TestHandlerHandlePart:
         )
 
 
-class FakeResponse:
-    def __init__(self, content, status_code=200):
-        self._content = content
-        self._remaining_content = content
+class FakeResponse(requests.Response):
+    def __init__(self, content: bytes, status_code: int = 200):
+        super().__init__()
+        self._content: bytes = content
+        self._remaining_content: bytes = content
         self.status_code = status_code
         self.encoding = None
 
     @property
-    def content(self):
+    def content(self) -> bytes:
         return self._remaining_content
 
-    def iter_content(self, chunk_size, *_, **__):
+    def iter_content(  # type: ignore[override]
+        self, chunk_size: int, *_, **__
+    ):
         iterators = [iter(self._content)] * chunk_size
         for chunk in zip(*iterators):
             self._remaining_content = self._remaining_content[chunk_size:]
