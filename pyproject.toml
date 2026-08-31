@@ -43,7 +43,7 @@ module = [
     "cloudinit.distros.parsers.hostname",
     "cloudinit.distros.parsers.resolv_conf",
     "cloudinit.helpers",
-    "cloudinit.netinfo",
+    "cloudinit.sources.DataSourceCloudStack",
     "cloudinit.sources.DataSourceConfigDrive",
     "cloudinit.sources.DataSourceEc2",
     "cloudinit.sources.DataSourceExoscale",
