@@ -1,6 +1,7 @@
 import logging
 from collections import namedtuple
 from contextlib import ExitStack
+from typing import Any, List, Tuple
 from unittest.mock import patch
 
 import pytest
@@ -45,7 +46,7 @@ NETPLAN_CALL_LIST: list = [
 
 @pytest.fixture
 def available_mocks():
-    mocks = namedtuple("Mocks", "m_which, m_file, m_exists")
+    mocks = namedtuple("mocks", "m_which, m_file, m_exists")
     with ExitStack() as mocks_context:
         mocks_context.enter_context(
             patch("cloudinit.distros.uses_systemd", return_value=False)
@@ -64,7 +65,7 @@ def available_mocks():
 
 @pytest.fixture
 def unavailable_mocks():
-    mocks = namedtuple("Mocks", "m_which, m_file, m_exists")
+    mocks = namedtuple("mocks", "m_which, m_file, m_exists")
     with ExitStack() as mocks_context:
         mocks_context.enter_context(
             patch("cloudinit.distros.uses_systemd", return_value=False)
@@ -384,7 +385,7 @@ class TestNetworkManagerActivatorBringUp:
 
         m_isfile.side_effect = fake_isfile_no_nmconn
 
-        expected_call_list = [
+        expected_call_list: List[Tuple[Any, ...]] = [
             (
                 (
                     [
