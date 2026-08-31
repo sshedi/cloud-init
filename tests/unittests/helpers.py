@@ -19,7 +19,7 @@ from cloudinit import distros, helpers, settings, util
 from tests.helpers import cloud_init_project_dir
 
 try:
-    import apt_pkg  # type: ignore # noqa: F401
+    import apt_pkg  # noqa: F401
 
     HAS_APT_PKG = True
 except ImportError:
@@ -284,10 +284,11 @@ def skipUnlessJsonSchema():
 
 
 def skipUnlessJinjaVersionGreaterThan(version=(0, 0, 0)):
-    import jinja2
+    from importlib.metadata import version as pkg_version
 
+    jinja2_version = pkg_version("jinja2")
     return pytest.mark.skipif(
-        tuple(map(int, jinja2.__version__.split("."))) < version,
+        tuple(map(int, jinja2_version.split("."))) < version,
         reason=f"jinj2 version is less than {version}",
     )
 
