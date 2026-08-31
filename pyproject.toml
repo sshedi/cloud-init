@@ -43,7 +43,6 @@ module = [
     "cloudinit.distros.parsers.hostname",
     "cloudinit.distros.parsers.resolv_conf",
     "cloudinit.helpers",
-    "cloudinit.net.network_state",
     "cloudinit.netinfo",
     "cloudinit.sources.DataSourceConfigDrive",
     "cloudinit.sources.DataSourceEc2",
