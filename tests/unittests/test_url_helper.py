@@ -247,12 +247,12 @@ class TestReadFileOrUrl:
 
         class FakeSessionRaisesHttpError(requests.Session):
             @classmethod
-            def request(cls, **kwargs):
+            def request(cls, **kwargs):  # type: ignore[override]
                 raise requests.exceptions.RequestException("broke")
 
         class FakeSession(requests.Session):
             @classmethod
-            def request(cls, **kwargs):
+            def request(cls, **kwargs):  # type: ignore[override]
                 assert {
                     "url": url,
                     "allow_redirects": True,
@@ -277,6 +277,7 @@ class TestReadFileOrUrl:
             # assert default headers, method, url and allow_redirects True
             # Success on 2nd call with FakeSession
             response = read_file_or_url(url)
+        assert isinstance(response, UrlResponse)
         assert m_response == response._response
 
 
@@ -349,7 +350,7 @@ class TestReadFileOrUrlParameters:
 
         class FakeSession(requests.Session):
             @classmethod
-            def request(cls, **kwargs):
+            def request(cls, **kwargs):  # type: ignore[override]
                 expected_kwargs = {
                     "url": url,
                     "allow_redirects": True,
@@ -372,6 +373,7 @@ class TestReadFileOrUrlParameters:
         ):
             response = read_file_or_url(url, timeout=readurl_timeout)
 
+        assert isinstance(response, UrlResponse)
         assert response._response == m_response
 
 
@@ -405,7 +407,7 @@ class TestReadUrl:
 
         class FakeSession(requests.Session):
             @classmethod
-            def request(cls, **kwargs):
+            def request(cls, **kwargs):  # type: ignore[override]
                 expected_kwargs = {
                     "url": url,
                     "allow_redirects": True,
@@ -437,7 +439,7 @@ class TestReadUrl:
 
         class FakeSession(requests.Session):
             @classmethod
-            def request(cls, **kwargs):
+            def request(cls, **kwargs):  # type: ignore[override]
                 expected_kwargs = {
                     "url": url,
                     "allow_redirects": True,
