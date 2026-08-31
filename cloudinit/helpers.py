@@ -202,7 +202,7 @@ class ConfigMerger:
         return e_cfgs
 
     def _get_instance_configs(self):
-        i_cfgs = []
+        i_cfgs: list[dict] = []
         # If cloud-config was written, pick it up as
         # a configuration file to use when running...
         if not self._paths:
@@ -443,7 +443,7 @@ class DefaultingConfigParser(RawConfigParser):
     DEF_BOOLEAN = False
     DEF_BASE = None
 
-    def get(self, section, option):
+    def get(self, section, option):  # type: ignore[override]
         value = self.DEF_BASE
         try:
             value = RawConfigParser.get(self, section, option)
@@ -462,17 +462,17 @@ class DefaultingConfigParser(RawConfigParser):
         if self.has_option(section, option):
             RawConfigParser.remove_option(self, section, option)
 
-    def getboolean(self, section, option):
+    def getboolean(self, section, option):  # type: ignore[override]
         if not self.has_option(section, option):
             return self.DEF_BOOLEAN
         return RawConfigParser.getboolean(self, section, option)
 
-    def getfloat(self, section, option):
+    def getfloat(self, section, option):  # type: ignore[override]
         if not self.has_option(section, option):
             return self.DEF_FLOAT
         return RawConfigParser.getfloat(self, section, option)
 
-    def getint(self, section, option):
+    def getint(self, section, option):  # type: ignore[override]
         if not self.has_option(section, option):
             return self.DEF_INT
         return RawConfigParser.getint(self, section, option)
