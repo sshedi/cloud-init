@@ -6,6 +6,7 @@ import os
 import random
 import re
 import string
+from typing import Any, Dict
 
 import pytest
 
@@ -40,7 +41,7 @@ def _old_mergedict(src, cand):
 
 
 def _old_mergemanydict(*args):
-    out = {}
+    out: Dict[str, Any] = {}
     for a in args:
         out = _old_mergedict(out, a)
     return out
@@ -64,7 +65,7 @@ def _make_dict(current_depth, max_depth, rand):
         t = dict
     else:
         t = rand.choice(TYPES)
-    base = None
+    base: Any = None
     if t in [None]:
         return base
     if t in [dict, list, tuple]:
@@ -108,12 +109,12 @@ class TestSimpleRun:
         expected_files = {}
         for fn in glob.glob(os.path.join(merge_root, SOURCE_PAT)):
             base_fn = os.path.basename(fn)
-            file_id = re.match(r"source(\d+)\-(\d+)[.]yaml", base_fn)
-            if not file_id:
+            file_id_match = re.match(r"source(\d+)\-(\d+)[.]yaml", base_fn)
+            if not file_id_match:
                 raise IOError(
                     "File %s does not have a numeric identifier" % (fn)
                 )
-            file_id = int(file_id.group(1))
+            file_id = int(file_id_match.group(1))
             source_ids[file_id].append(fn)
             expected_fn = os.path.join(merge_root, EXPECTED_PAT % (file_id))
             if not os.path.isfile(expected_fn):
@@ -254,7 +255,7 @@ class TestSimpleRun:
                 "f": ["1"],
             },
         }
-        b = {
+        b: Dict[str, Any] = {
             "b": {
                 "f": [],
             }
